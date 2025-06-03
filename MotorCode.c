@@ -45,7 +45,7 @@
 
 //ALL ABOUT NVIC (ctrl, reload, pri, current )
 #define NVIC_PRI0_R  						(*((volatile uint32_t *)0xE000E400)) //PRI0 because interrupt 0 ( Port A ) ( OFFSET 0X400)
-#define NVIC_PRI3_R  						(*((volatile uint32_t *)0xE000E40C)) //PRI3 because SysTick interrupt ( OFFSET 0X40C)
+#define NVIC_SYS_PRI3_R  						(*((volatile uint32_t *)0xE000E40C)) //PRI3 because SysTick interrupt ( OFFSET 0X40C)
 #define NVIC_STCTRL_R						(*((volatile uint32_t *)0xE000E010)) //Offset 0x010
 #define NVIC_STRELOAD_R					(*((volatile uint32_t *)0xE000E014)) //Offset 0x014
 #define NVIC_STCURRECNT_R				(*((volatile uint32_t *)0xE000E018)) //Offset 0x018
@@ -88,4 +88,18 @@ void DCMotor_Init(void)
 	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R & 0x00FFFFFF) | 0x60000000; // setting to priority 3 ( under switch's priority) ( Using PRI3 as per ARM Manual not TM4CNCPDT Datasheet remember)
 	NVIC_STCTRL_R = 0x07; //bit 0-2 on
 	
+}
+
+void SysTick_Handler (void)
+{
+	if(GPIO_PORTA_DATA_R & 0x80) //If PA7 High is true
+	{
+		GPIO_PORTA_DATA_R &= ~0x80; //turn PA7 Low
+		NVIC_STRELOAD_R = Low - 1; //Make reload value as much as Low value inputted
+	}
+	else
+	{
+		GPIO_PORTA_DATA_R &= 0x80; //turn PA7 High
+		NVIC_STRELOAD_R = High - 1; // Load reload value with High Value inputted
+	}
 }

@@ -19,9 +19,9 @@
 	
 
 3. Software Specification
-	- Create a Motor init function and include Systick Init inside it
+	- Create a Motor init function and include Systick Init inside it ( PA7 for outpur)
 	- Create systick handler ( how it performs constantly so you dont have to always press the button to make DC Motor spins)
-	- Create Switch init ( init the pull up and edge interrupt)
+	- Create Switch init ( init the pull up and edge interrupt) 
 	- Create switch handler ( the logic when the switches are pressed)
 	- Create main funct
 
@@ -40,13 +40,22 @@
 #define GPIO_PORTA_DIR_R        (*((volatile uint32_t *)0x40004400)) //Offset 0x400
 #define GPIO_PORTA_PUR_R        (*((volatile uint32_t *)0x40004510)) //Offset 0x510
 #define GPIO_PORTA_DEN_R        (*((volatile uint32_t *)0x4000451C)) //Offset 0x51c
+#define GPIO_PORTA_DR8R					(*((volatile uint32_t *)0x40004508) //Offset 0x508
 	
 
 //ALL ABOUT NVIC (ctrl, reload, pri, current )
 #define NVIC_PRI0_R  						(*((volatile uint32_t *)0xE000E400)) //PRI0 because interrupt 0 ( Port A ) ( OFFSET 0X400)
+#define NVIC_PRI3_R  						(*((volatile uint32_t *)0xE000E40C)) //PRI3 because SysTick interrupt ( OFFSET 0X40C)
 #define NVIC_STCTRL_R						(*((volatile uint32_t *)0xE000E010)) //Offset 0x010
 #define NVIC_STRELOAD_R					(*((volatile uint32_t *)0xE000E014)) //Offset 0x014
-#define NVIC_STCURRENT_R				(*((volatile uint32_t *)0xE000E018)) //Offset 0x018
+#define NVIC_STCURRECNT_R				(*((volatile uint32_t *)0xE000E018)) //Offset 0x018
+
+	
+//**GENERAL VARIABLE**//
+
+uint32_t High; //For high PWM
+uint32_t Low;  //For low PWM
+
 
 //**FUNCTIONS**//
 
@@ -60,7 +69,23 @@ void WaitForInterrupts(void) {
     __asm("WFI");  // WFI = Wait For Interrupt instruction
 }
 
-void MotorInit (void)
+void GPIO_Init (void)
 {
+	SYSCTL_RCGCGPIO_R |= 0x01; // Turn On Clock Port A
+	GPIO_PORTA_DEN_R |= 0xB0;  //1011 0000, PA4 and PA5 and PA7 Enable
+	GPIO_PORTA_DIR_R |= 0x80; //1000 0000,PA4 & PA5 Input, PA7 Output 
+	GPIO_PORTA_DATA_R &= ~0x80; // 0111 1111, neglect everyone so PA7 is low
+	GPIO_PORTA_PUR_R |= 0x30; //0011 0000, PA4 & PA5 Pull up enabled	
+
+}
+
+void DCMotor_Init(void)
+{
+	High = Low = 1600; //10% from 16000 ( 16000 cycles, so 1 ms )
+	NVIC_STCTRL_R = 0;
+	NVIC_STRELOAD_R = Low - 1; //reload per 10%
+	NVIC_STCURRECNT_R = 0;
+	NVIC_SYS_PRI3_R = (NVIC_SYS_PRI3_R & 0x00FFFFFF) | 0x60000000; // setting to priority 3 ( under switch's priority) ( Using PRI3 as per ARM Manual not TM4CNCPDT Datasheet remember)
+	NVIC_STCTRL_R = 0x07; //bit 0-2 on
 	
 }

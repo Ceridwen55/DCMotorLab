@@ -19,10 +19,10 @@
 	
 
 3. Software Specification
-	- Create a Motor init function and include Systick Init inside it ( PA7 for outpur)
+	- Create motor init and GPIO init
 	- Create systick handler ( how it performs constantly so you dont have to always press the button to make DC Motor spins)
-	- Create Switch init ( init the pull up and edge interrupt) 
-	- Create switch handler ( the logic when the switches are pressed)
+	- Create button init ( init the pull up and edge interrupt) 
+	- Create button handler ( the logic when the switches are pressed)
 	- Create main funct
 
 */
@@ -47,6 +47,7 @@
 #define GPIO_PORTA_IEV_R 				(*((volatile uint32_t *)0x4000440C)) //Offset 0x40C
 #define GPIO_PORTA_ICR_R 				(*((volatile uint32_t *)0x4000441C)) //Offset 0x41C
 #define GPIO_PORTA_IM_R 				(*((volatile uint32_t *)0x40004410)) //Offset 0x410
+#define GPIO_PORTA_RIS_R 				(*((volatile uint32_t *)0x40004414)) //Offset 0x414
 
 #define NVIC_EN0_R  						(*((volatile uint32_t *)0xE000E100)) //Because interrupt vector for port A is interrupt 0 (OFFSET 0X100)
 	
@@ -63,6 +64,15 @@
 
 uint32_t High; //For high PWM
 uint32_t Low;  //For low PWM
+
+//**DECLARATIONS**//
+void EnableInterrupts(void);
+void WaitForInterrupts(void);
+void GPIO_Init (void);
+void DCMotor_Init(void);
+void SysTick_Handler (void);
+void Button_Init(uint32_t delay);
+void GPIOA_Handler(void);
 
 
 //**FUNCTIONS**//
@@ -126,7 +136,30 @@ void Button_Init (uint32_t delay) //we are initiating Edge interrupt for the but
 	
 }
 
-void GPIOPortA_Handler(void)
+void GPIOA_Handler(void) // Dont forget to match the name like the vector said
 {
+	if( GPIO_PORTA_RIS_R & 0x10) //0001 0000, if PA4 is triggered, increase speed alias prolong high state
+	{
+		GPIO_PORTA_ICR_R = 0x10; // clear flag PA4
+		if(Low < 14400) Low = Low - 1600; // increase speed 10% ( because low -)
+	}
+	if (GPIO_PORTA_RIS_R & 0x20) // 0010 0000, if PA5 is triggered, decrease speed alias prolong low state
+	{
+		GPIO_PORTA_ICR_R = 0x20; // clear flag PA5
+		if(Low > 1600) Low = 1600 + Low; // decrease speed 10% ( because low +)
+	}
 	
+	High = 16000 - Low;
+}
+
+int main (void)
+{
+	GPIO_Init();
+	DCMotor_Init();
+	Button_Init();
+	EnableInterrupts();
+	while(1)
+	{
+		WaitForInterrupts();
+	}
 }

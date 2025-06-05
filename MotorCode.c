@@ -40,7 +40,8 @@
 #define GPIO_PORTA_DIR_R        (*((volatile uint32_t *)0x40004400)) //Offset 0x400
 #define GPIO_PORTA_PUR_R        (*((volatile uint32_t *)0x40004510)) //Offset 0x510
 #define GPIO_PORTA_DEN_R        (*((volatile uint32_t *)0x4000451C)) //Offset 0x51c
-#define GPIO_PORTA_DR8R					(*((volatile uint32_t *)0x40004508) //Offset 0x508
+#define GPIO_PORTA_DR8R					(*((volatile uint32_t *)0x40004508)) //Offset 0x508
+
 	
 #define GPIO_PORTA_IS_R 				(*((volatile uint32_t *)0x40004404)) //Offset 0x404
 #define GPIO_PORTA_IBE_R 				(*((volatile uint32_t *)0x40004408)) //Offset 0x408
@@ -54,7 +55,7 @@
 
 //ALL ABOUT NVIC (ctrl, reload, pri, current )
 #define NVIC_PRI0_R  						(*((volatile uint32_t *)0xE000E400)) //PRI0 because interrupt 0 ( Port A ) ( OFFSET 0X400)
-#define NVIC_SYS_PRI3_R  						(*((volatile uint32_t *)0xE000E40C)) //PRI3 because SysTick interrupt ( OFFSET 0X40C)
+#define NVIC_SYS_PRI3_R  				(*((volatile uint32_t *)0xE000E40C)) //PRI3 because SysTick interrupt ( OFFSET 0X40C)
 #define NVIC_STCTRL_R						(*((volatile uint32_t *)0xE000E010)) //Offset 0x010
 #define NVIC_STRELOAD_R					(*((volatile uint32_t *)0xE000E014)) //Offset 0x014
 #define NVIC_STCURRECNT_R				(*((volatile uint32_t *)0xE000E018)) //Offset 0x018
@@ -71,7 +72,7 @@ void WaitForInterrupts(void);
 void GPIO_Init (void);
 void DCMotor_Init(void);
 void SysTick_Handler (void);
-void Button_Init(uint32_t delay);
+void Button_Init();
 void GPIOA_Handler(void);
 
 
@@ -90,16 +91,17 @@ void WaitForInterrupts(void) {
 void GPIO_Init (void)
 {
 	SYSCTL_RCGCGPIO_R |= 0x01; // Turn On Clock Port A
-	GPIO_PORTA_DEN_R |= 0xB0;  //1011 0000, PA4 and PA5 and PA7 Enable
-	GPIO_PORTA_DIR_R |= 0x80; //1000 0000,PA4 & PA5 Input, PA7 Output 
-	GPIO_PORTA_DATA_R &= ~0x80; // 0111 1111, neglect everyone so PA7 is low
+	GPIO_PORTA_DEN_R |= 0x38;  //0011 1000, PA4 and PA5 and PA3 Enable
+	GPIO_PORTA_DIR_R |= 0x08; //0000 1000,PA4 & PA5 Input, PA3 Output 
+	GPIO_PORTA_DATA_R &= ~0x08; // 1111 0111, neglect everyone so PA3 is low
 	GPIO_PORTA_PUR_R |= 0x30; //0011 0000, PA4 & PA5 Pull up enabled	
+	GPIO_PORTA_DR8R |= 0x08; // Set PA3 8mA drive strength
 
 }
 
 void DCMotor_Init(void)
 {
-	High = Low = 1600; //10% from 16000 ( 16000 cycles, so 1 ms )
+	High = Low = 11200; //80% from 16000 ( 11200 cycles)
 	NVIC_STCTRL_R = 0;
 	NVIC_STRELOAD_R = Low - 1; //reload per 10%
 	NVIC_STCURRECNT_R = 0;
@@ -108,23 +110,23 @@ void DCMotor_Init(void)
 	
 }
 
-void SysTick_Handler (void) // Control how the motor/dynamo operates automatically by systick (maintaining constant number that is set, at the first stage or after changed by pressing switch next time)
+void SysTick_Handler(void) // Control how the motor/dynamo operates automatically by systick (maintaining constant number that is set, at the first stage or after changed by pressing switch next time)
 {
-	if(GPIO_PORTA_DATA_R & 0x80) //If PA7 High is true
+	if(GPIO_PORTA_DATA_R & 0x08) //If PA3 High is true
 	{
-		GPIO_PORTA_DATA_R &= ~0x80; //turn PA7 Low
-		NVIC_STRELOAD_R = Low - 1; //Make reload value as much as Low value inputted
+		GPIO_PORTA_DATA_R &= ~0x08; //turn PA3 Low
+		NVIC_STRELOAD_R = High - 1; //Make reload value as much as Low value inputted
 	}
 	else
 	{
-		GPIO_PORTA_DATA_R &= 0x80; //turn PA7 High
-		NVIC_STRELOAD_R = High - 1; // Load reload value with High Value inputted
+		GPIO_PORTA_DATA_R |= 0x08; //turn PA7 High
+		NVIC_STRELOAD_R = Low - 1; // Load reload value with High Value inputted
 	}
+	
 }
 
-void Button_Init (uint32_t delay) //we are initiating Edge interrupt for the buttons
+void Button_Init (void) //we are initiating Edge interrupt for the buttons
 {
-	delay = SYSCTL_RCGCGPIO_R;
 	GPIO_PORTA_IS_R &= ~0x30; //1100 1111, PA4 and PA5 Edge sensitive 
 	GPIO_PORTA_IBE_R &= ~0x30; // Not both Edge
 	GPIO_PORTA_IEV_R &= ~0x30; // Falling Edge event for PA4 & PA5
@@ -138,15 +140,15 @@ void Button_Init (uint32_t delay) //we are initiating Edge interrupt for the but
 
 void GPIOA_Handler(void) // Dont forget to match the name like the vector said
 {
-	if( GPIO_PORTA_RIS_R & 0x10) //0001 0000, if PA4 is triggered, increase speed alias prolong high state
+	if( GPIO_PORTA_RIS_R & 0x10) //0001 0000, if PA4 is triggered, decrease speed alias prolong low state
 	{
 		GPIO_PORTA_ICR_R = 0x10; // clear flag PA4
-		if(Low < 14400) Low = Low - 1600; // increase speed 10% ( because low -)
+		if(Low < 14400) Low = Low + 1600; 
 	}
-	if (GPIO_PORTA_RIS_R & 0x20) // 0010 0000, if PA5 is triggered, decrease speed alias prolong low state
+	if (GPIO_PORTA_RIS_R & 0x20) // 0010 0000, if PA5 is triggered, increase speed alias prolong high state
 	{
 		GPIO_PORTA_ICR_R = 0x20; // clear flag PA5
-		if(Low > 1600) Low = 1600 + Low; // decrease speed 10% ( because low +)
+		if(Low > 3200) Low = Low - 1600; 
 	}
 	
 	High = 16000 - Low;
@@ -160,6 +162,7 @@ int main (void)
 	EnableInterrupts();
 	while(1)
 	{
+		
 		WaitForInterrupts();
 	}
 }

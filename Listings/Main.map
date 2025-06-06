@@ -290,15 +290,15 @@ Image Symbol Table
     .text                                    0x00000472   Section        0  indicate_semi.o(.text)
     [Anonymous Symbol]                       0x00000474   Section        0  motorcode.o(.text.Button_Init)
     [Anonymous Symbol]                       0x000004e0   Section        0  motorcode.o(.text.DCMotor_Init)
-    [Anonymous Symbol]                       0x00000534   Section        0  motorcode.o(.text.EnableInterrupts)
-    [Anonymous Symbol]                       0x00000538   Section        0  motorcode.o(.text.GPIOA_Handler)
-    [Anonymous Symbol]                       0x000005dc   Section        0  motorcode.o(.text.GPIO_Init)
-    [Anonymous Symbol]                       0x00000640   Section        0  motorcode.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x000006a4   Section        0  system_tm4c129.o(.text.SystemInit)
-    [Anonymous Symbol]                       0x000006c8   Section        0  motorcode.o(.text.WaitForInterrupts)
-    [Anonymous Symbol]                       0x000006cc   Section        0  motorcode.o(.text.main)
-    $v0                                      0x000006ec   Number         0  fpinit.o(x$fpl$fpinit)
-    x$fpl$fpinit                             0x000006ec   Section       26  fpinit.o(x$fpl$fpinit)
+    [Anonymous Symbol]                       0x00000538   Section        0  motorcode.o(.text.EnableInterrupts)
+    [Anonymous Symbol]                       0x0000053c   Section        0  motorcode.o(.text.GPIOA_Handler)
+    [Anonymous Symbol]                       0x000005f8   Section        0  motorcode.o(.text.GPIO_Init)
+    [Anonymous Symbol]                       0x0000065c   Section        0  motorcode.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x000006c0   Section        0  system_tm4c129.o(.text.SystemInit)
+    [Anonymous Symbol]                       0x000006e4   Section        0  motorcode.o(.text.WaitForInterrupts)
+    [Anonymous Symbol]                       0x000006e8   Section        0  motorcode.o(.text.main)
+    $v0                                      0x00000708   Number         0  fpinit.o(x$fpl$fpinit)
+    x$fpl$fpinit                             0x00000708   Section       26  fpinit.o(x$fpl$fpinit)
     .bss                                     0x20000008   Section       96  libspace.o(.bss)
     Heap_Mem                                 0x20000070   Data           0  startup_tm4c129.o(HEAP)
     Stack_Mem                                0x20000070   Data         512  startup_tm4c129.o(STACK)
@@ -536,19 +536,19 @@ Image Symbol Table
     __use_no_semihosting_swi                 0x00000471   Thumb Code     2  use_no_semi.o(.text)
     __semihosting_library_function           0x00000473   Thumb Code     0  indicate_semi.o(.text)
     Button_Init                              0x00000475   Thumb Code   106  motorcode.o(.text.Button_Init)
-    DCMotor_Init                             0x000004e1   Thumb Code    84  motorcode.o(.text.DCMotor_Init)
-    EnableInterrupts                         0x00000535   Thumb Code     4  motorcode.o(.text.EnableInterrupts)
-    GPIOA_Handler                            0x00000539   Thumb Code   162  motorcode.o(.text.GPIOA_Handler)
-    GPIO_Init                                0x000005dd   Thumb Code    98  motorcode.o(.text.GPIO_Init)
-    SysTick_Handler                          0x00000641   Thumb Code   100  motorcode.o(.text.SysTick_Handler)
-    SystemInit                               0x000006a5   Thumb Code    36  system_tm4c129.o(.text.SystemInit)
-    WaitForInterrupts                        0x000006c9   Thumb Code     4  motorcode.o(.text.WaitForInterrupts)
-    main                                     0x000006cd   Thumb Code    32  motorcode.o(.text.main)
-    _fp_init                                 0x000006ed   Thumb Code    26  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x00000705   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x00000705   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    Region$$Table$$Base                      0x00000708   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00000728   Number         0  anon$$obj.o(Region$$Table)
+    DCMotor_Init                             0x000004e1   Thumb Code    88  motorcode.o(.text.DCMotor_Init)
+    EnableInterrupts                         0x00000539   Thumb Code     4  motorcode.o(.text.EnableInterrupts)
+    GPIOA_Handler                            0x0000053d   Thumb Code   186  motorcode.o(.text.GPIOA_Handler)
+    GPIO_Init                                0x000005f9   Thumb Code    98  motorcode.o(.text.GPIO_Init)
+    SysTick_Handler                          0x0000065d   Thumb Code   100  motorcode.o(.text.SysTick_Handler)
+    SystemInit                               0x000006c1   Thumb Code    36  system_tm4c129.o(.text.SystemInit)
+    WaitForInterrupts                        0x000006e5   Thumb Code     4  motorcode.o(.text.WaitForInterrupts)
+    main                                     0x000006e9   Thumb Code    32  motorcode.o(.text.main)
+    _fp_init                                 0x00000709   Thumb Code    26  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x00000721   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x00000721   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    Region$$Table$$Base                      0x00000724   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00000744   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20000000   Data           4  system_tm4c129.o(.data.SystemCoreClock)
     __libspace_start                         0x20000008   Data          96  libspace.o(.bss)
     High                                     0x20000068   Data           4  motorcode.o(.bss.High)
@@ -563,9 +563,9 @@ Memory Map of the image
 
   Image Entry point : 0x00000201
 
-  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00000730, Max: 0x00100000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00000750, Max: 0x00100000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000728, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000744, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -632,27 +632,27 @@ Memory Map of the image
     0x00000472   0x00000472   0x00000002   PAD
     0x00000474   0x00000474   0x0000006a   Code   RO           12    .text.Button_Init   motorcode.o
     0x000004de   0x000004de   0x00000002   PAD
-    0x000004e0   0x000004e0   0x00000054   Code   RO            8    .text.DCMotor_Init  motorcode.o
-    0x00000534   0x00000534   0x00000004   Code   RO            2    .text.EnableInterrupts  motorcode.o
-    0x00000538   0x00000538   0x000000a2   Code   RO           14    .text.GPIOA_Handler  motorcode.o
-    0x000005da   0x000005da   0x00000002   PAD
-    0x000005dc   0x000005dc   0x00000062   Code   RO            6    .text.GPIO_Init     motorcode.o
-    0x0000063e   0x0000063e   0x00000002   PAD
-    0x00000640   0x00000640   0x00000064   Code   RO           10    .text.SysTick_Handler  motorcode.o
-    0x000006a4   0x000006a4   0x00000024   Code   RO           39    .text.SystemInit    system_tm4c129.o
-    0x000006c8   0x000006c8   0x00000004   Code   RO            4    .text.WaitForInterrupts  motorcode.o
-    0x000006cc   0x000006cc   0x00000020   Code   RO           16    .text.main          motorcode.o
-    0x000006ec   0x000006ec   0x0000001a   Code   RO          141    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x00000706   0x00000706   0x00000002   PAD
-    0x00000708   0x00000708   0x00000020   Data   RO          216    Region$$Table       anon$$obj.o
+    0x000004e0   0x000004e0   0x00000058   Code   RO            8    .text.DCMotor_Init  motorcode.o
+    0x00000538   0x00000538   0x00000004   Code   RO            2    .text.EnableInterrupts  motorcode.o
+    0x0000053c   0x0000053c   0x000000ba   Code   RO           14    .text.GPIOA_Handler  motorcode.o
+    0x000005f6   0x000005f6   0x00000002   PAD
+    0x000005f8   0x000005f8   0x00000062   Code   RO            6    .text.GPIO_Init     motorcode.o
+    0x0000065a   0x0000065a   0x00000002   PAD
+    0x0000065c   0x0000065c   0x00000064   Code   RO           10    .text.SysTick_Handler  motorcode.o
+    0x000006c0   0x000006c0   0x00000024   Code   RO           39    .text.SystemInit    system_tm4c129.o
+    0x000006e4   0x000006e4   0x00000004   Code   RO            4    .text.WaitForInterrupts  motorcode.o
+    0x000006e8   0x000006e8   0x00000020   Code   RO           16    .text.main          motorcode.o
+    0x00000708   0x00000708   0x0000001a   Code   RO          141    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x00000722   0x00000722   0x00000002   PAD
+    0x00000724   0x00000724   0x00000020   Data   RO          216    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x00000728, Size: 0x00000270, Max: 0x00040000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x00000748, Size: 0x00000270, Max: 0x00040000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00000728   0x00000004   Data   RW           41    .data.SystemCoreClock  system_tm4c129.o
-    0x20000004   0x0000072c   0x00000004   PAD
+    0x20000000   0x00000748   0x00000004   Data   RW           41    .data.SystemCoreClock  system_tm4c129.o
+    0x20000004   0x0000074c   0x00000004   PAD
     0x20000008        -       0x00000060   Zero   RW           81    .bss                c_w.l(libspace.o)
     0x20000068        -       0x00000004   Zero   RW           19    .bss.High           motorcode.o
     0x2000006c        -       0x00000004   Zero   RW           18    .bss.Low            motorcode.o
@@ -667,12 +667,12 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       590          0          0          0          8       1400   motorcode.o
+       618          0          0          0          8       1405   motorcode.o
        300         22        512          0        512       6036   startup_tm4c129.o
         36          0          0          4          0       1480   system_tm4c129.o
 
     ----------------------------------------------------------------------
-       932         22        544          4        524       8916   Object Totals
+       960         22        544          4        524       8921   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          6          0          0          0          4          0   (incl. Padding)
 
@@ -723,15 +723,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      1288         38        544          4        620       9508   Grand Totals
-      1288         38        544          4        620       9508   ELF Image Totals
-      1288         38        544          4          0          0   ROM Totals
+      1316         38        544          4        620       9513   Grand Totals
+      1316         38        544          4        620       9513   ELF Image Totals
+      1316         38        544          4          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 1832 (   1.79kB)
+    Total RO  Size (Code + RO Data)                 1860 (   1.82kB)
     Total RW  Size (RW Data + ZI Data)               624 (   0.61kB)
-    Total ROM Size (Code + RO Data + RW Data)       1836 (   1.79kB)
+    Total ROM Size (Code + RO Data + RW Data)       1864 (   1.82kB)
 
 ==============================================================================
 

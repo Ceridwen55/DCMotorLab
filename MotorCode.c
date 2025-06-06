@@ -1,4 +1,4 @@
-//LAB DESIGN
+//DC Motor PWM LAB DESIGN
 /*
 
 1. Plan the Hardware specification
@@ -101,7 +101,7 @@ void GPIO_Init (void)
 
 void DCMotor_Init(void)
 {
-	High = Low = 11200; //80% from 16000 ( 11200 cycles)
+	High = Low = 8000000; //80% from 16000 ( 11200 cycles)(16.000.000 = 1 s, first start per 500 ms or 0.5 s 8.000.000, increase per 0,1 s or per 100 ms or 1.600.000
 	NVIC_STCTRL_R = 0;
 	NVIC_STRELOAD_R = Low - 1; //reload per 10%
 	NVIC_STCURRECNT_R = 0;
@@ -143,12 +143,12 @@ void GPIOA_Handler(void) // Dont forget to match the name like the vector said
 	if( GPIO_PORTA_RIS_R & 0x10) //0001 0000, if PA4 is triggered, decrease speed alias prolong low state
 	{
 		GPIO_PORTA_ICR_R = 0x10; // clear flag PA4
-		if(Low < 14400) Low = Low + 1600; 
+		if(Low < 14400000) Low = Low + 1600000; 
 	}
 	if (GPIO_PORTA_RIS_R & 0x20) // 0010 0000, if PA5 is triggered, increase speed alias prolong high state
 	{
 		GPIO_PORTA_ICR_R = 0x20; // clear flag PA5
-		if(Low > 3200) Low = Low - 1600; 
+		if(Low > 9600000) Low = Low - 1600000; 
 	}
 	
 	High = 16000 - Low;
